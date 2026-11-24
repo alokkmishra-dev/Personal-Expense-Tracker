@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Expense Tracker | CSD0111 Mini Project</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header & Navigation Links -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="brand">
+        <img src="images/logo.svg" alt="ExpenseFlow Logo" class="logo" />
+        <div>
+          <h1>ExpenseFlow</h1>
+          <p class="subtitle">Personal Income, Expense &amp; Monthly Savings Tracker</p>
+        </div>
+      </div>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#dashboard">Dashboard</a></li>
+          <li><a href="#add-transaction">Add Entry</a></li>
+          <li><a href="#history">Transactions</a></li>
+          <li><a href="https://github.com/alokkmishra-dev/Personal-Expense-Tracker" target="_blank" rel="noopener">GitHub Repo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Section 1: Summary Dashboard -->
+    <section id="dashboard" class="dashboard-section" aria-label="Financial Summary">
+      <div class="cards-grid">
+        <article class="card card-balance">
+          <span class="card-label">Net Balance (Savings)</span>
+          <h2 id="total-balance">₹0.00</h2>
+          <small id="savings-rate">Savings Rate: 0%</small>
+        </article>
+        <article class="card card-income">
+          <span class="card-label">Total Income</span>
+          <h2 id="total-income" class="text-income">+₹0.00</h2>
+          <small id="income-count">0 income entries</small>
+        </article>
+        <article class="card card-expense">
+          <span class="card-label">Total Expenses</span>
+          <h2 id="total-expense" class="text-expense">-₹0.00</h2>
+          <small id="expense-count">0 expense entries</small>
+        </article>
+      </div>
+
+      <!-- Monthly Budget Tracker Bar -->
+      <div class="budget-box">
+        <div class="budget-header">
+          <div>
+            <strong>Monthly Expense Budget:</strong>
+            <span id="budget-display">₹5,000.00</span>
+          </div>
+          <div class="budget-controls">
+            <input type="number" id="budget-input" min="100" step="100" placeholder="Set budget (₹)" aria-label="Set monthly budget" />
+            <button type="button" id="set-budget-btn" class="btn btn-secondary">Update Budget</button>
+          </div>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div id="budget-progress" class="progress-fill"></div>
+        </div>
+        <p id="budget-status" class="budget-note">Spent 0% of your monthly budget.</p>
+      </div>
+    </section>
+
+    <!-- Section 2: Add New Transaction Form -->
+    <section id="add-transaction" class="panel">
+      <div class="panel-header">
+        <h2>Add New Transaction</h2>
+        <div class="quick-actions">
+          <button type="button" id="load-demo-btn" class="btn btn-outline">Load Sample Data</button>
+          <button type="button" id="export-csv-btn" class="btn btn-outline">Export CSV</button>
+        </div>
+      </div>
+
+      <form id="transaction-form" novalidate>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="title">Description / Title *</label>
+            <input type="text" id="title" name="title" placeholder="e.g., Hostel Mess Fee, Monthly Allowance" required />
+            <span class="error-msg" id="title-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Amount (₹) *</label>
+            <input type="number" id="amount" name="amount" step="0.01" min="1" placeholder="e.g., 450" required />
+            <span class="error-msg" id="amount-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="type">Transaction Type *</label>
+            <select id="type" name="type" required>
+              <option value="expense">Expense (-)</option>
+              <option value="income">Income (+)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" name="category" required>
+              <option value="">-- Select Category --</option>
+              <option value="Food & Mess">Food &amp; Mess</option>
+              <option value="Travel & Transport">Travel &amp; Transport</option>
+              <option value="Books & Study">Books &amp; Study</option>
+              <option value="Bills & Recharge">Bills &amp; Recharge</option>
+              <option value="Shopping & Personal">Shopping &amp; Personal</option>
+              <option value="Allowance & Salary">Allowance &amp; Salary</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="error-msg" id="category-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date *</label>
+            <input type="date" id="date" name="date" required />
+            <span class="error-msg" id="date-error"></span>
+          </div>
+
+          <div class="form-group form-submit">
+            <label>&nbsp;</label>
+            <button type="submit" class="btn btn-primary">+ Add Transaction</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Section 3: Filter & Transaction History Table -->
+    <section id="history" class="panel">
+      <div class="panel-header">
+        <h2>Transaction History</h2>
+        <button type="button" id="clear-all-btn" class="btn btn-danger">Clear All</button>
+      </div>
+
+      <!-- Search and Filter Controls -->
+      <div class="filter-bar">
+        <input type="text" id="search-input" placeholder="Search by description..." aria-label="Search transactions" />
+        <select id="filter-type" aria-label="Filter by type">
+          <option value="all">All Types</option>
+          <option value="income">Income Only</option>
+          <option value="expense">Expense Only</option>
+        </select>
+        <select id="filter-category" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+          <option value="Food & Mess">Food &amp; Mess</option>
+          <option value="Travel & Transport">Travel &amp; Transport</option>
+          <option value="Books & Study">Books &amp; Study</option>
+          <option value="Bills & Recharge">Bills &amp; Recharge</option>
+          <option value="Shopping & Personal">Shopping &amp; Personal</option>
+          <option value="Allowance & Salary">Allowance &amp; Salary</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Amount (₹)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="transaction-tbody"></tbody>
+        </table>
+      </div>
+      <p id="empty-state" class="empty-msg">No transactions found. Add an entry above or click "Load Sample Data".</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>CSD0111 – Project Studio-I Mini Project | Developed by <strong>Alok Kumar Mishra</strong> (B.Tech CSE, ITM University Gwalior)</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
